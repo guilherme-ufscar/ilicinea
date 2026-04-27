@@ -1,0 +1,477 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================
+// AUTENTICAÇÃO (NextAuth v5)
+// ============================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(COMERCIANTE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts  Account[]
+  sessions  Session[]
+  empresa   Empresa?
+  imoveis   Imovel[]
+  newsletter Newsletter?
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  COMERCIANTE
+  ANUNCIANTE_IMOVEL
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================
+// GUIA COMERCIAL
+// ============================
+
+model Empresa {
+  id       String @id @default(cuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  slug         String  @unique
+  nomeFantasia String
+  razaoSocial  String?
+  cnpj         String?
+  categoria    String
+  segmentacao  String
+  endereco     String?
+  bairro       String?
+  cidade       String  @default("Ilicínea")
+  estado       String  @default("MG")
+  cep          String?
+  telefone     String?
+  celular      String?
+
+  plano            PlanoEmpresa @default(GRATUITO)
+  planoStatus      PlanoStatus  @default(ATIVO)
+  stripeCustomerId String?
+  stripeSubId      String?
+  planoExpiraEm    DateTime?
+
+  whatsapp     String?
+  fotoPerfil   String?
+  fotoFachada  String?
+  linkGoogleMaps String?
+
+  descricao    String?  @db.Text
+  palavrasChave String?
+  linkInstagram String?
+  linkFacebook  String?
+  linkSite      String?
+  email         String?
+
+  galeria   GaleriaFoto[]
+  promocoes Promocao[]
+
+  aprovado     Boolean @default(false)
+  ativo        Boolean @default(true)
+  destaqueHome Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("empresas")
+}
+
+enum PlanoEmpresa {
+  GRATUITO
+  ESSENCIAL
+  PROFISSIONAL
+}
+
+enum PlanoStatus {
+  ATIVO
+  CANCELADO
+  EXPIRADO
+  AGUARDANDO_PAGAMENTO
+}
+
+model GaleriaFoto {
+  id        String   @id @default(cuid())
+  empresaId String
+  empresa   Empresa  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  ordem     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("galeria_fotos")
+}
+
+model Promocao {
+  id          String    @id @default(cuid())
+  empresaId   String
+  empresa     Empresa   @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  titulo      String
+  descricao   String    @db.Text
+  imagemUrl   String?
+  validadeAte DateTime?
+  ativo       Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("promocoes")
+}
+
+// ============================
+// IMÓVEIS
+// ============================
+
+model Imovel {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  codigo    String @unique
+  titulo    String
+  slug      String @unique
+  descricao String @db.Text
+
+  tipo       TipoImovel
+  finalidade FinalidadeImovel
+  negocio    NegocioImovel
+
+  cep           String?
+  logradouro    String?
+  numero        String?
+  complemento   String?
+  bairro        String?
+  cidade        String  @default("Ilicínea")
+  estado        String  @default("MG")
+  latitude      Float?
+  longitude     Float?
+  linkGoogleMaps String?
+
+  preco           Float?
+  precoNegociavel Boolean @default(false)
+  condominio      Float?
+  iptu            Float?
+  caucao          Float?
+  precoTemporada  Float?
+
+  areaTotal      Float?
+  areaConstruida Float?
+  areaTerreno    Float?
+  quartos        Int?
+  suites         Int?
+  banheiros      Int?
+  vagas          Int?
+  andares        Int?
+  posicaoSol     String?
+
+  sala            Boolean      @default(false)
+  cozinha         Boolean      @default(false)
+  areaServico     Boolean      @default(false)
+  varanda         Boolean      @default(false)
+  quintal         Boolean      @default(false)
+  piscina         Boolean      @default(false)
+  churrasqueira   Boolean      @default(false)
+  portaoEletrico  Boolean      @default(false)
+  cercaEletrica   Boolean      @default(false)
+  cameraSeguranca Boolean      @default(false)
+  alarme          Boolean      @default(false)
+  aquecedorAgua   Boolean      @default(false)
+  arCondicionado  Boolean      @default(false)
+  mobiliado       ImovelMobilia @default(NAO_MOBILIADO)
+  animaisPermitidos Boolean    @default(false)
+
+  hectares          Float?
+  aguaEncanada      Boolean @default(false)
+  energiaEletrica   Boolean @default(false)
+  escritura         Boolean @default(false)
+  georreferenciado  Boolean @default(false)
+  cadastroRural     Boolean @default(false)
+  tipoSolo          String?
+  usoAgricola       String?
+  benfeitorias      String? @db.Text
+
+  wc         Int?
+  mezanino   Boolean @default(false)
+  peDireito  Float?
+  trifasico  Boolean @default(false)
+
+  fotoCapa      String?
+  fotos         FotoImovel[]
+  videoUrl      String?
+  tourVirtualUrl String?
+
+  nomeAnunciante  String
+  telefoneContato String?
+  whatsappContato String?
+  emailContato    String?
+  creci           String?
+
+  status        StatusImovel @default(PENDENTE)
+  destaque      Boolean      @default(false)
+  visualizacoes Int          @default(0)
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  publicadoEm DateTime?
+
+  @@map("imoveis")
+}
+
+enum TipoImovel {
+  APARTAMENTO
+  AREA_INDUSTRIAL
+  AREA_RESIDENCIAL
+  BARRACAO
+  CASA
+  CHACARA
+  FAZENDA
+  FLAT
+  GLEBA
+  INDUSTRIAL
+  LOJA
+  PAVILHAO_GALPAO
+  POUSADA
+  PREDIO
+  RANCHO
+  SALA
+  SALA_COMERCIAL
+  SITIO
+  SOBRADO
+  TERRENO
+}
+
+enum FinalidadeImovel {
+  RESIDENCIAL
+  COMERCIAL
+  RURAL
+  MISTO
+}
+
+enum NegocioImovel {
+  VENDA
+  ALUGUEL
+  TEMPORADA_DIARIA
+  TEMPORADA_MENSAL
+}
+
+enum ImovelMobilia {
+  NAO_MOBILIADO
+  SEMI_MOBILIADO
+  MOBILIADO
+}
+
+enum StatusImovel {
+  PENDENTE
+  ATIVO
+  VENDIDO
+  ALUGADO
+  INATIVO
+  REJEITADO
+}
+
+model FotoImovel {
+  id       String @id @default(cuid())
+  imovelId String
+  imovel   Imovel @relation(fields: [imovelId], references: [id], onDelete: Cascade)
+  url      String
+  alt      String?
+  ordem    Int    @default(0)
+
+  @@map("fotos_imovel")
+}
+
+// ============================
+// NOTÍCIAS
+// ============================
+
+model Noticia {
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  titulo        String
+  subtitulo     String?
+  conteudo      String  @db.Text
+  resumo        String? @db.Text
+  imagemCapa    String?
+  imagemCapaAlt String?
+
+  autorNome   String
+  autorUserId String?
+  fonte       String?
+  linkFonte   String?
+
+  categorias String[]
+  tags       String[]
+  local      String?
+  dataEvento DateTime?
+
+  metaTitulo    String?
+  metaDescricao String?
+
+  status        StatusConteudo @default(RASCUNHO)
+  publicadoEm   DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  destaque      Boolean        @default(false)
+  fixadoHome    Boolean        @default(false)
+  visualizacoes Int            @default(0)
+
+  @@map("noticias")
+}
+
+// ============================
+// TURISMO
+// ============================
+
+model PontoTuristico {
+  id        String  @id @default(cuid())
+  slug      String  @unique
+  nome      String
+  subtitulo String?
+  descricao String  @db.Text
+  resumo    String? @db.Text
+
+  endereco     String?
+  bairro       String?
+  latitude     Float?
+  longitude    Float?
+  linkGoogleMaps String?
+  comoChegar   String? @db.Text
+
+  categoria       CategoriaTurismo
+  dificuldade     DificuldadeTurismo?
+  distanciaCentro Float?
+  tempoDuracao    String?
+  melhorEpoca     String?
+  entradaGratuita Boolean @default(true)
+  precoEntrada    Float?
+  acessivelPCD    Boolean @default(false)
+
+  horarioFuncionamento String?
+  telefoneContato      String?
+  linkInstagram        String?
+  linkSite             String?
+  dicasImportantes     String? @db.Text
+
+  imagemCapa    String?
+  imagemCapaAlt String?
+  galeria       FotoTurismo[]
+  videoUrl      String?
+
+  metaTitulo    String?
+  metaDescricao String?
+  tags          String[]
+
+  status        StatusConteudo @default(RASCUNHO)
+  publicadoEm   DateTime?
+  destaque      Boolean        @default(false)
+  fixadoHome    Boolean        @default(false)
+  visualizacoes Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("pontos_turisticos")
+}
+
+enum CategoriaTurismo {
+  NATUREZA
+  RELIGIOSO
+  HISTORICO
+  CULTURAL
+  ESPORTE_AVENTURA
+  GASTRONOMIA
+  FESTIVAL_EVENTO
+}
+
+enum DificuldadeTurismo {
+  FACIL
+  MODERADO
+  DIFICIL
+}
+
+model FotoTurismo {
+  id               String         @id @default(cuid())
+  pontoTuristicoId String
+  ponto            PontoTuristico @relation(fields: [pontoTuristicoId], references: [id], onDelete: Cascade)
+  url              String
+  alt              String?
+  ordem            Int            @default(0)
+
+  @@map("fotos_turismo")
+}
+
+// ============================
+// NEWSLETTER
+// ============================
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  nome      String?
+  userId    String?  @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  ativo     Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("newsletter")
+}
+
+// ============================
+// ENUMS COMPARTILHADOS
+// ============================
+
+enum StatusConteudo {
+  RASCUNHO
+  PUBLICADO
+  ARQUIVADO
+}

@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cor-primaria: #F5820A;
+  --cor-primaria-hover: #D96E00;
+  --cor-primaria-light: #FEF0DC;
+  --cor-primaria-dark: #B35A00;
+  --cor-texto: #111111;
+  --cor-texto-suave: #444444;
+  --cor-texto-muted: #888888;
+  --cor-acento: #E8263A;
+  --cor-acento-light: #FDE8EA;
+  --cor-fundo: #FFFFFF;
+  --cor-fundo-suave: #F8F8F8;
+  --cor-borda: #E5E5E5;
+  --cor-borda-forte: #CCCCCC;
+  --cor-whatsapp: #25D366;
+  --cor-whatsapp-hover: #1EBE5A;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-[#111111] font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-[#111111];
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#F5820A] hover:bg-[#D96E00] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-[#F5820A] text-[#F5820A] hover:bg-[#FEF0DC] font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .btn-whatsapp {
+    @apply bg-[#25D366] hover:bg-[#1EBE5A] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+  }
+
+  .badge-essencial {
+    @apply bg-[#FEF0DC] text-[#F5820A] text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .badge-profissional {
+    @apply bg-[#111111] text-white text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .badge-gratuito {
+    @apply bg-[#E5E5E5] text-[#888888] text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-[#E5E5E5] shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold text-[#111111] mb-1;
+  }
+
+  .section-subtitle {
+    @apply text-[#444444] mb-6;
+  }
+}
