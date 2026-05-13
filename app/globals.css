@@ -1,6 +1,30 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #F5820A;
+  --color-primary-hover: #D96E00;
+  --color-primary-light: #FEF0DC;
+  --color-primary-dark: #B35A00;
+  --color-text: #111111;
+  --color-text-soft: #444444;
+  --color-text-muted: #888888;
+  --color-accent: #E8263A;
+  --color-accent-light: #FDE8EA;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #F8F8F8;
+  --color-border: #E5E5E5;
+  --color-border-strong: #CCCCCC;
+  --color-whatsapp: #25D366;
+  --color-whatsapp-hover: #1EBE5A;
+  --color-plan-free: #888888;
+  --color-plan-essential: #F5820A;
+  --color-plan-professional: #111111;
+  --color-status-success: #16A34A;
+  --color-status-warning: #F59E0B;
+  --color-status-error: #DC2626;
+  --color-status-info: #2563EB;
+  --font-sans: "Inter", sans-serif;
+}
 
 :root {
   --cor-primaria: #F5820A;
@@ -22,48 +46,48 @@
 
 @layer base {
   body {
-    @apply bg-white text-[#111111] font-sans antialiased;
+    @apply bg-white text-text font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold text-[#111111];
+    @apply font-bold text-text;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-[#F5820A] hover:bg-[#D96E00] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    @apply bg-primary hover:bg-primary-hover text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
   }
 
   .btn-outline {
-    @apply border border-[#F5820A] text-[#F5820A] hover:bg-[#FEF0DC] font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    @apply border border-primary text-primary hover:bg-primary-light font-medium px-4 py-2 rounded-lg transition-colors duration-200;
   }
 
   .btn-whatsapp {
-    @apply bg-[#25D366] hover:bg-[#1EBE5A] text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
+    @apply bg-whatsapp hover:bg-whatsapp-hover text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200;
   }
 
   .badge-essencial {
-    @apply bg-[#FEF0DC] text-[#F5820A] text-xs font-medium px-2 py-0.5 rounded-full;
+    @apply bg-primary-light text-primary text-xs font-medium px-2 py-0.5 rounded-full;
   }
 
   .badge-profissional {
-    @apply bg-[#111111] text-white text-xs font-medium px-2 py-0.5 rounded-full;
+    @apply bg-text text-white text-xs font-medium px-2 py-0.5 rounded-full;
   }
 
   .badge-gratuito {
-    @apply bg-[#E5E5E5] text-[#888888] text-xs font-medium px-2 py-0.5 rounded-full;
+    @apply bg-border text-text-muted text-xs font-medium px-2 py-0.5 rounded-full;
   }
 
   .card {
-    @apply bg-white rounded-xl border border-[#E5E5E5] shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-white rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow duration-200;
   }
 
   .section-title {
-    @apply text-2xl font-bold text-[#111111] mb-1;
+    @apply text-2xl font-bold text-text mb-1;
   }
 
   .section-subtitle {
-    @apply text-[#444444] mb-6;
+    @apply text-text-soft mb-6;
   }
 }
