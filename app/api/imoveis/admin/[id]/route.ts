@@ -23,9 +23,8 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     })
     if (imovel?.user?.email) {
       try {
-        const { resend, emailFrom } = await import('@/lib/resend')
-        await resend.emails.send({
-          from: emailFrom,
+        const { sendEmail } = await import('@/lib/resend')
+        await sendEmail({
           to: imovel.user.email,
           subject: `Imóvel ${imovel.codigo} — Rejeitado`,
           html: `

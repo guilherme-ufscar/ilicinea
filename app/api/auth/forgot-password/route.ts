@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'crypto'
 import { prisma } from '@/lib/prisma'
-import { resend, emailFrom } from '@/lib/resend'
+import { sendEmail } from '@/lib/resend'
 
 export async function POST(req: NextRequest) {
   const { email } = await req.json()
@@ -26,23 +26,18 @@ export async function POST(req: NextRequest) {
 
   const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/recuperar-senha/${token}`
 
-  try {
-    await resend.emails.send({
-      from: emailFrom,
-      to: email,
-      subject: 'Recuperar senha — Ilicínea.com',
-      html: `
-        <h2>Recuperação de senha</h2>
-        <p>Olá ${user.name || ''},</p>
-        <p>Clique no link abaixo para redefinir sua senha:</p>
-        <a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#F5820A;color:white;text-decoration:none;border-radius:8px;">Redefinir senha</a>
-        <p>Este link expira em 1 hora.</p>
-        <p>Se você não solicitou, ignore este e-mail.</p>
-      `,
-    })
-  } catch (e) {
-    console.error('Erro ao enviar e-mail:', e)
-  }
+  await sendEmail({
+    to: email,
+    subject: 'Recuperar senha — Ilicínea.com',
+    html: `
+      <h2>Recuperação de senha</h2>
+      <p>Olá ${user.name || ''},</p>
+      <p>Clique no link abaixo para redefinir sua senha:</p>
+      <a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#F5820A;color:white;text-decoration:none;border-radius:8px;">Redefinir senha</a>
+      <p>Este link expira em 1 hora.</p>
+      <p>Se você não solicitou, ignore este e-mail.</p>
+    `,
+  })
 
   return NextResponse.json({ message: 'Se o e-mail existir, enviaremos um link de recuperação.' })
 }
