@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import CopyLinkButton from '@/components/CopyLinkButton'
 
 interface Props { params: Promise<{ codigo: string }> }
 
@@ -262,7 +263,7 @@ export default async function ImovelDetailPage({ params }: Props) {
             <div className="pt-3 border-t border-border flex items-center gap-2">
               <span className="text-xs text-text-muted">Compartilhar:</span>
               <a href={whatsappShareUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp text-xs py-1 px-3">WhatsApp</a>
-              <button onClick={() => navigator.clipboard.writeText(shareUrl)} className="btn-outline text-xs py-1 px-3">Link</button>
+              <CopyLinkButton url={shareUrl} className="btn-outline text-xs py-1 px-3">Link</CopyLinkButton>
             </div>
           </div>
         </div>

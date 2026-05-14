@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import type { Empresa, GaleriaFoto, Promocao } from '@prisma/client'
 

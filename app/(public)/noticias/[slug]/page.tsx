@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
+import CopyLinkButton from '@/components/CopyLinkButton'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -219,20 +220,13 @@ export default async function NoticiaDetailPage({ params }: Props) {
           </svg>
           WhatsApp
         </a>
-        <button
-          onClick={(e) => {
-            navigator.clipboard.writeText(shareUrl)
-              .then(() => alert('Link copiado!'))
-              .catch(() => {})
-          }}
-          className="btn-outline text-sm py-1.5 px-4 inline-flex items-center gap-2"
-        >
+        <CopyLinkButton url={shareUrl} className="btn-outline text-sm py-1.5 px-4 inline-flex items-center gap-2">
           <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
           </svg>
           Copiar link
-        </button>
+        </CopyLinkButton>
       </div>
 
       {/* Outras notícias */}
