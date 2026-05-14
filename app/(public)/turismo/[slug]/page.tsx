@@ -21,7 +21,7 @@ const DIFICULDADE_MAP: Record<string, string> = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const ponto = await prisma.pontoTuristico.findUnique({
+  const ponto = await prisma.pontoTuristico.findFirst({
     where: { slug, status: 'PUBLICADO' },
     select: { metaTitulo: true, metaDescricao: true, nome: true, resumo: true, imagemCapa: true },
   })
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TurismoDetailPage({ params }: Props) {
   const { slug } = await params
 
-  const ponto = await prisma.pontoTuristico.findUnique({
+  const ponto = await prisma.pontoTuristico.findFirst({
     where: { slug, status: 'PUBLICADO' },
     include: { galeria: { orderBy: { ordem: 'asc' } } },
   })

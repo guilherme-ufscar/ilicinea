@@ -18,7 +18,7 @@ function formatLabel(s: string): string {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { codigo } = await params
-  const imovel = await prisma.imovel.findUnique({
+  const imovel = await prisma.imovel.findFirst({
     where: { codigo, status: 'ATIVO' },
     select: { titulo: true, descricao: true, fotoCapa: true },
   })
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ImovelDetailPage({ params }: Props) {
   const { codigo } = await params
 
-  const imovel = await prisma.imovel.findUnique({
+  const imovel = await prisma.imovel.findFirst({
     where: { codigo, status: 'ATIVO' },
     include: {
       fotos: { orderBy: { ordem: 'asc' } },

@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ComercioPerfilPage({ params }: Props) {
-  const empresa = await prisma.empresa.findUnique({
+  const empresa = await prisma.empresa.findFirst({
     where: { slug: params.slug, aprovado: true, ativo: true },
     include: {
       galeria: { orderBy: { ordem: 'asc' } },

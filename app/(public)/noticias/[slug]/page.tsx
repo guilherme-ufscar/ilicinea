@@ -31,7 +31,7 @@ function formatDateTime(date: Date | null | undefined): string {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const noticia = await prisma.noticia.findUnique({
+  const noticia = await prisma.noticia.findFirst({
     where: { slug, status: 'PUBLICADO' },
     select: {
       metaTitulo: true,
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function NoticiaDetailPage({ params }: Props) {
   const { slug } = await params
 
-  const noticia = await prisma.noticia.findUnique({
+  const noticia = await prisma.noticia.findFirst({
     where: { slug, status: 'PUBLICADO' },
   })
 
