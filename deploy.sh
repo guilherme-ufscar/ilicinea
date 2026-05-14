@@ -20,10 +20,10 @@ echo "4. Aguardando app iniciar..."
 sleep 5
 
 echo "5. Rodando migrations..."
-docker-compose exec -T app npx prisma migrate deploy
+docker-compose exec -T app npx --no-install prisma migrate deploy
 
 echo "6. Rodando seed (dados de exemplo)..."
-docker-compose exec -T app npx prisma db seed
+docker-compose exec -T app npx --no-install prisma db seed
 
 echo "7. Verificando containers..."
 docker-compose ps
