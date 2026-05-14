@@ -19,8 +19,8 @@ docker-compose up -d
 echo "4. Aguardando app iniciar..."
 sleep 5
 
-echo "5. Rodando migrations..."
-docker-compose exec -T app ./node_modules/.bin/prisma migrate deploy
+echo "5. Criando/atualizando tabelas do banco..."
+docker-compose exec -T app ./node_modules/.bin/prisma db push
 
 echo "6. Rodando seed (dados de exemplo)..."
 docker-compose exec -T app ./node_modules/.bin/prisma db seed
