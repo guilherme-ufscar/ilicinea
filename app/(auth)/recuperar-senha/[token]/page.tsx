@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 export default function ResetPasswordTokenPage() {
   const { token } = useParams<{ token: string }>()
@@ -54,7 +55,7 @@ export default function ResetPasswordTokenPage() {
     return (
       <div className="w-full max-w-md">
         <div className="card p-8 text-center">
-          <div className="text-4xl mb-4">✓</div>
+          <div className="flex justify-center mb-4"><Icon name="check-circle" className="w-10 h-10 text-status-success" /></div>
           <h1 className="text-xl font-bold text-text mb-2">Senha redefinida!</h1>
           <p className="text-text-soft text-sm">Sua senha foi alterada com sucesso. Redirecionando para o login...</p>
         </div>

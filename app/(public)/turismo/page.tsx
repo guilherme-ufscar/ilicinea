@@ -116,7 +116,7 @@ export default async function TurismoPage({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-text-muted text-sm">
-                    🌿 Sem foto
+                    <span className="inline-flex items-center gap-2"><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c4-4 6-8 6-12a6 6 0 1 0-12 0c0 4 2 8 6 12Z" /><path d="M9 10c1 0 1.5-.5 2-1.5C11.5 7.5 12 7 13 7c1 0 1.5.5 2 1.5" /></svg>Sem foto</span>
                   </div>
                 )}
               </div>

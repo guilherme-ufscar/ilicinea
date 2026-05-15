@@ -1,16 +1,17 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import Icon from '@/components/Icon'
 import LogoutButton from './LogoutButton'
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/usuarios', label: 'Usuários', icon: '👥' },
-  { href: '/admin/comercios', label: 'Comércios', icon: '🏪' },
-  { href: '/admin/imoveis', label: 'Imóveis', icon: '🏠' },
-  { href: '/admin/noticias', label: 'Notícias', icon: '📰' },
-  { href: '/admin/turismo', label: 'Turismo', icon: '🏞️' },
-  { href: '/admin/newsletter', label: 'Newsletter', icon: '📧' },
+  { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
+  { href: '/admin/usuarios', label: 'Usuários', icon: 'users' },
+  { href: '/admin/comercios', label: 'Comércios', icon: 'store' },
+  { href: '/admin/imoveis', label: 'Imóveis', icon: 'home' },
+  { href: '/admin/noticias', label: 'Notícias', icon: 'news' },
+  { href: '/admin/turismo', label: 'Turismo', icon: 'map' },
+  { href: '/admin/newsletter', label: 'Newsletter', icon: 'mail' },
 ]
 
 export default async function AdminLayout({
@@ -46,7 +47,7 @@ export default async function AdminLayout({
               href={item.href}
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-soft hover:bg-primary-light hover:text-primary transition-colors text-sm font-medium"
             >
-              <span className="text-base">{item.icon}</span>
+              <Icon name={item.icon as 'dashboard' | 'users' | 'store' | 'home' | 'news' | 'map' | 'mail'} className="w-4 h-4" />
               {item.label}
             </Link>
           ))}

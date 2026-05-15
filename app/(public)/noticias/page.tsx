@@ -161,7 +161,7 @@ export default async function NoticiasPage({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-muted text-sm">
-                      📰 Sem imagem de capa
+                      <span className="inline-flex items-center gap-2"><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h6" /></svg>Sem imagem de capa</span>
                     </div>
                   )}
                 </div>
@@ -209,7 +209,7 @@ export default async function NoticiasPage({
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-text-muted text-sm">
-                        📰 Sem imagem
+                        <span className="inline-flex items-center gap-2"><svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h6" /></svg>Sem imagem</span>
                       </div>
                     )}
                   </div>

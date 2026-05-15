@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 export default function RecuperarSenhaPage() {
   const [email, setEmail] = useState('')
@@ -40,7 +41,7 @@ export default function RecuperarSenhaPage() {
     return (
       <div className="w-full max-w-md">
         <div className="card p-8 text-center">
-          <div className="text-4xl mb-4">📧</div>
+          <div className="flex justify-center mb-4"><Icon name="mail" className="w-10 h-10 text-primary" /></div>
           <h1 className="text-xl font-bold text-text mb-2">E-mail enviado!</h1>
           <p className="text-text-soft text-sm">
             Se o e-mail informado estiver cadastrado, você receberá um link para redefinir sua senha.

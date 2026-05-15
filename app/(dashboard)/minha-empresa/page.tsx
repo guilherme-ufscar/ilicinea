@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 export default async function MinhaEmpresaPage() {
   const session = await auth()
@@ -78,17 +79,17 @@ export default async function MinhaEmpresaPage() {
       {/* Quick actions */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Link href="/minha-empresa/editar" className="card p-5 hover:border-primary transition-colors">
-          <span className="text-2xl">✏️</span>
+          <Icon name="edit" className="w-7 h-7 text-primary" />
           <h3 className="font-semibold text-text mt-2">Editar dados</h3>
           <p className="text-text-soft text-sm">Atualize endereço, telefone, descrição e mais.</p>
         </Link>
         <Link href="/minha-empresa/fotos" className="card p-5 hover:border-primary transition-colors">
-          <span className="text-2xl">🖼️</span>
+          <Icon name="images" className="w-7 h-7 text-primary" />
           <h3 className="font-semibold text-text mt-2">Gerenciar fotos</h3>
           <p className="text-text-soft text-sm">Adicione ou remova fotos da galeria.</p>
         </Link>
         <Link href="/minha-empresa/plano" className="card p-5 hover:border-primary transition-colors">
-          <span className="text-2xl">💎</span>
+          <Icon name="gem" className="w-7 h-7 text-primary" />
           <h3 className="font-semibold text-text mt-2">Ver plano</h3>
           <p className="text-text-soft text-sm">Consulte detalhes e faça upgrade.</p>
         </Link>

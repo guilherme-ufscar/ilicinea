@@ -124,7 +124,7 @@ export default function EditorToolbar({ editor, enableImageUpload }: Props) {
           {/* Image upload */}
           <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleImageUpload} className="hidden" />
           <button onClick={() => fileRef.current?.click()} disabled={uploading} className={btnClass(false)} title="Inserir imagem">
-            {uploading ? '...' : '🖼'}
+            {uploading ? '...' : <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="8.5" cy="10" r="1.5" /><path d="m21 16-5-5-8 8" /></svg>}
           </button>
 
           {/* YouTube */}
@@ -148,11 +148,11 @@ export default function EditorToolbar({ editor, enableImageUpload }: Props) {
             onKeyDown={(e) => e.key === 'Enter' && setLink()}
           />
           <button onClick={setLink} className="text-xs bg-primary text-white px-2 py-1 rounded">OK</button>
-          <button onClick={() => setShowLinkInput(false)} className="text-xs text-text-muted">✕</button>
+          <button onClick={() => setShowLinkInput(false)} className="text-xs text-text-muted"><svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg></button>
         </div>
       ) : (
         <button onClick={() => setShowLinkInput(true)} className={btnClass(editor.isActive('link'))} title="Inserir link">
-          🔗
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 1 0-7.07-7.07L11 5" /><path d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L13 19" /></svg>
         </button>
       )}
 
@@ -162,7 +162,7 @@ export default function EditorToolbar({ editor, enableImageUpload }: Props) {
       <button onClick={() => editor.chain().focus().undo().run()} className={btnClass(false)} title="Desfazer">↩</button>
       <button onClick={() => editor.chain().focus().redo().run()} className={btnClass(false)} title="Refazer">↪</button>
       <button onClick={() => editor.chain().focus().clearNodes().unsetAllMarks().run()} className={btnClass(false)} title="Limpar formatação">
-        ✧
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="m12 3 1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8Z" /><path d="M5 18h.01" /><path d="M19 5h.01" /><path d="M19 19h.01" /></svg>
       </button>
     </div>
   )

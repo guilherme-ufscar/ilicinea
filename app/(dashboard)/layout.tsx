@@ -1,13 +1,14 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import Icon from '@/components/Icon'
 
 const navItems = [
-  { href: '/minha-empresa', label: 'Visão geral', icon: '📊' },
-  { href: '/minha-empresa/editar', label: 'Editar empresa', icon: '✏️' },
-  { href: '/minha-empresa/fotos', label: 'Galeria de fotos', icon: '🖼️' },
-  { href: '/minha-empresa/plano', label: 'Plano', icon: '💎' },
-  { href: '/minha-empresa/promocao', label: 'Promoção do mês', icon: '🎯' },
+  { href: '/minha-empresa', label: 'Visão geral', icon: 'dashboard' },
+  { href: '/minha-empresa/editar', label: 'Editar empresa', icon: 'edit' },
+  { href: '/minha-empresa/fotos', label: 'Galeria de fotos', icon: 'images' },
+  { href: '/minha-empresa/plano', label: 'Plano', icon: 'gem' },
+  { href: '/minha-empresa/promocao', label: 'Promoção do mês', icon: 'target' },
 ]
 
 export default async function EmpresarioLayout({ children }: { children: React.ReactNode }) {
@@ -32,7 +33,7 @@ export default async function EmpresarioLayout({ children }: { children: React.R
                 href={item.href}
                 className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-soft hover:bg-primary-light hover:text-primary transition-colors text-sm font-medium"
               >
-                <span>{item.icon}</span>
+                <Icon name={item.icon as 'dashboard' | 'edit' | 'images' | 'gem' | 'target'} className="w-4 h-4" />
                 {item.label}
               </Link>
             ))}

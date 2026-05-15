@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 export const metadata: Metadata = { title: 'Criar conta' }
 
@@ -18,7 +19,7 @@ export default function CriarContaPage() {
             className="block border-2 border-[#F5820A] rounded-xl p-5 hover:bg-[#FEF0DC] transition-colors group"
           >
             <div className="flex items-start gap-3">
-              <span className="text-2xl">🏪</span>
+              <Icon name="store" className="w-7 h-7 text-primary mt-0.5" />
               <div>
                 <h2 className="font-bold text-[#111111] group-hover:text-[#F5820A]">Sou empresário</h2>
                 <p className="text-sm text-[#444444] mt-1">
@@ -33,7 +34,7 @@ export default function CriarContaPage() {
             className="block border-2 border-[#E5E5E5] rounded-xl p-5 hover:border-[#F5820A] hover:bg-[#FEF0DC] transition-colors group"
           >
             <div className="flex items-start gap-3">
-              <span className="text-2xl">🏠</span>
+              <Icon name="home" className="w-7 h-7 text-primary mt-0.5" />
               <div>
                 <h2 className="font-bold text-[#111111] group-hover:text-[#F5820A]">Quero anunciar imóvel</h2>
                 <p className="text-sm text-[#444444] mt-1">

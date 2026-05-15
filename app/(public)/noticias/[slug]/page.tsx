@@ -249,7 +249,7 @@ export default async function NoticiaDetailPage({ params }: Props) {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-muted text-sm">
-                      📰
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h6" /></svg>
                     </div>
                   )}
                 </div>

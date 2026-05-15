@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 export const metadata: Metadata = {
   title: 'Ilicínea.com — Portal Local de Ilicínea/MG',
@@ -10,35 +11,35 @@ export const metadata: Metadata = {
 const modules = [
   {
     href: '/comercios',
-    icon: '🏪',
+    icon: 'store',
     title: 'Guia Comercial',
     description: 'Encontre os melhores estabelecimentos da cidade',
   },
   {
     href: '/imoveis',
-    icon: '🏠',
+    icon: 'home',
     title: 'Imóveis',
     description: 'Compre, alugue ou anuncie imóveis em Ilicínea',
   },
   {
     href: '/noticias',
-    icon: '📰',
+    icon: 'news',
     title: 'Notícias',
     description: 'Fique por dentro de tudo que acontece na cidade',
   },
   {
     href: '/turismo',
-    icon: '🌿',
+    icon: 'map',
     title: 'Turismo',
     description: 'Descubra os encantos de Ilicínea',
   },
 ]
 
 const categories = [
-  { href: '/comercios', icon: '🏪', label: 'Comércios' },
-  { href: '/imoveis', icon: '🏠', label: 'Imóveis' },
-  { href: '/noticias', icon: '📰', label: 'Notícias' },
-  { href: '/turismo', icon: '🌿', label: 'Turismo' },
+  { href: '/comercios', icon: 'store', label: 'Comércios' },
+  { href: '/imoveis', icon: 'home', label: 'Imóveis' },
+  { href: '/noticias', icon: 'news', label: 'Notícias' },
+  { href: '/turismo', icon: 'map', label: 'Turismo' },
 ]
 
 export default function HomePage() {
@@ -77,7 +78,7 @@ export default function HomePage() {
                 href={cat.href}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#F5820A] text-[#F5820A] bg-white hover:bg-[#FEF0DC] font-medium text-sm transition-colors min-h-[44px]"
               >
-                <span>{cat.icon}</span>
+                <Icon name={cat.icon as 'store' | 'home' | 'news' | 'map'} className="w-5 h-5" />
                 {cat.label}
               </Link>
             ))}
@@ -99,7 +100,7 @@ export default function HomePage() {
                 href={mod.href}
                 className="card p-6 flex flex-col items-start gap-3 group"
               >
-                <span className="text-3xl">{mod.icon}</span>
+                <Icon name={mod.icon as 'store' | 'home' | 'news' | 'map'} className="w-8 h-8 text-primary" />
                 <h3 className="font-bold text-[#111111] text-lg">{mod.title}</h3>
                 <p className="text-[#444444] text-sm flex-1">{mod.description}</p>
                 <span className="text-[#F5820A] text-sm font-medium group-hover:underline">

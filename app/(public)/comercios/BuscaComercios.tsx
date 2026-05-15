@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Icon from '@/components/Icon'
 
 interface Props {
   segmentacoes: [string, number][]
@@ -52,7 +53,7 @@ export default function BuscaComercios({ segmentacoes, segmentacaoAtiva, buscaAt
               onClick={limparSegmentacao}
               className="px-3 py-1.5 rounded-full text-sm font-medium bg-primary text-white"
             >
-              ✕ Todos
+              <Icon name="x" className="w-3.5 h-3.5" /> Todos
             </button>
           )}
           {segmentacoes.map(([seg, count]) => (

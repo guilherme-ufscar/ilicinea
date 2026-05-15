@@ -1,10 +1,11 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import Icon from '@/components/Icon'
 
 const navItems = [
-  { href: '/meus-imoveis', label: 'Meus imóveis', icon: '🏠' },
-  { href: '/meus-imoveis/novo', label: 'Novo anúncio', icon: '➕' },
+  { href: '/meus-imoveis', label: 'Meus imóveis', icon: 'home' },
+  { href: '/meus-imoveis/novo', label: 'Novo anúncio', icon: 'plus' },
 ]
 
 export default async function ImovelDashboardLayout({ children }: { children: React.ReactNode }) {
@@ -24,13 +25,13 @@ export default async function ImovelDashboardLayout({ children }: { children: Re
             </div>
             {navItems.map(item => (
               <Link key={item.href} href={item.href} className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-soft hover:bg-primary-light hover:text-primary transition-colors text-sm font-medium">
-                <span>{item.icon}</span>
+                <Icon name={item.icon as 'home' | 'plus'} className="w-4 h-4" />
                 {item.label}
               </Link>
             ))}
             <div className="pt-2 mt-2 border-t border-border">
               <Link href="/" className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-text transition-colors text-sm">
-                ← Voltar ao site
+                <span aria-hidden="true">←</span> Voltar ao site
               </Link>
             </div>
           </div>
