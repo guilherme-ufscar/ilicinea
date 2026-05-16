@@ -21,12 +21,13 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-# Copia os node_modules do builder (já tem prisma generate pronto)
 COPY --from=builder /app/node_modules ./node_modules
-# Ajusta permissões para o usuário nextjs
-RUN chown -R nextjs:nodejs /app/node_modules /app/prisma
+COPY --from=builder /app/package.json ./package.json
+RUN chown -R nextjs:nodejs /app/node_modules /app/prisma /app/public /app/package.json
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x ./docker-entrypoint.sh && chown nextjs:nodejs ./docker-entrypoint.sh
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-CMD ["node", "server.js"]
+CMD ["./docker-entrypoint.sh"]

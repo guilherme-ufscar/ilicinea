@@ -67,19 +67,11 @@ export default function CadastroEmpresarioPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: form.name, email: form.email, password: form.password, role: 'COMERCIANTE' }),
-      })
-
-      const data = await res.json()
-      if (!res.ok) { setError(data.error); setLoading(false); return }
-
-      const loginRes = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
-      if (loginRes?.error) { setError('Conta criada, mas falha no login automático.'); setLoading(false); return }
-
-      const empresaRes = await fetch('/api/comercios', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: 'COMERCIANTE',
           nomeFantasia: form.nomeFantasia,
           razaoSocial: form.razaoSocial,
           cnpj: form.cnpj,
@@ -93,12 +85,11 @@ export default function CadastroEmpresarioPage() {
         }),
       })
 
-      if (!empresaRes.ok) {
-        const d = await empresaRes.json()
-        setError(d.error || 'Erro ao cadastrar empresa')
-        setLoading(false)
-        return
-      }
+      const data = await res.json()
+      if (!res.ok) { setError(data.error); setLoading(false); return }
+
+      const loginRes = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
+      if (loginRes?.error) { setError('Conta criada, mas falha no login automático.'); setLoading(false); return }
 
       router.push('/minha-empresa')
       router.refresh()
