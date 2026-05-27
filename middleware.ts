@@ -19,12 +19,16 @@ export default async function middleware(req: NextRequest) {
   const isProtectedRoute = protectedRoutes.some((r) => nextUrl.pathname.startsWith(r))
   const isAuthRoute = authRoutes.some((r) => nextUrl.pathname.startsWith(r))
 
-  if (isAdminRoute && token?.role !== 'ADMIN') {
-    return NextResponse.redirect(new URL('/entrar', nextUrl))
+  if (isAdminRoute && (!isLoggedIn || token?.role !== 'ADMIN')) {
+    const url = new URL('/entrar', nextUrl)
+    url.searchParams.set('callbackUrl', nextUrl.pathname)
+    return NextResponse.redirect(url)
   }
 
   if (isProtectedRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL('/entrar', nextUrl))
+    const url = new URL('/entrar', nextUrl)
+    url.searchParams.set('callbackUrl', nextUrl.pathname)
+    return NextResponse.redirect(url)
   }
 
   if (isAuthRoute && isLoggedIn) {

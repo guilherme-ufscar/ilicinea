@@ -1,9 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 
 export default function LoginForm() {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/minha-empresa'
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -29,7 +32,7 @@ export default function LoginForm() {
       return
     }
 
-    window.location.href = '/minha-empresa'
+    window.location.href = callbackUrl
   }
 
   return (
