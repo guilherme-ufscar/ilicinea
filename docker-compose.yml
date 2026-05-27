@@ -2,12 +2,15 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-      args:
-        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-        - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      dockerfile: Dockerfile.dev
     container_name: ilicinea_app
     restart: unless-stopped
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed || true && npm run dev"
+    volumes:
+      # Hot reload: monta o código fonte, ignora node_modules do host
+      - .:/app
+      - /app/node_modules
+      - /app/.next
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - NEXTAUTH_URL=${NEXTAUTH_URL}

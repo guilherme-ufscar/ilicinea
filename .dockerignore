@@ -1,3 +1,4 @@
+# Em dev, node_modules e .next são montados como volumes — não copiar do host
 node_modules
 .next
 .git
