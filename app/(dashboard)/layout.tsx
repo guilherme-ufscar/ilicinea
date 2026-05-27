@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 import Icon from '@/components/Icon'
+import UpgradeBanner from '@/components/UpgradeBanner'
 
 const navItems = [
   { href: '/minha-empresa', label: 'Visão geral', icon: 'dashboard' },
@@ -16,6 +18,13 @@ export default async function EmpresarioLayout({ children }: { children: React.R
 
   if (!session?.user) { redirect('/entrar') }
   if (session.user.role !== 'COMERCIANTE' && session.user.role !== 'ADMIN') { redirect('/') }
+
+  const empresa = await prisma.empresa.findUnique({
+    where: { userId: session.user.id },
+    select: { plano: true },
+  })
+
+  const isGratuito = !empresa || empresa.plano === 'GRATUITO'
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -46,7 +55,10 @@ export default async function EmpresarioLayout({ children }: { children: React.R
         </aside>
 
         {/* Main */}
-        <main className="lg:col-span-3">{children}</main>
+        <main className="lg:col-span-3">
+          {isGratuito && <UpgradeBanner />}
+          {children}
+        </main>
       </div>
     </div>
   )
