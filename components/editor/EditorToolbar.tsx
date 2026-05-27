@@ -14,19 +14,19 @@ export default function EditorToolbar({ editor, enableImageUpload }: Props) {
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  const setLink = useCallback(() => {
+    if (!editor || !linkUrl) return
+    editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run()
+    setShowLinkInput(false)
+    setLinkUrl('')
+  }, [editor, linkUrl])
+
   if (!editor) return null
 
   const btnClass = (active: boolean) =>
     `px-2 py-1.5 rounded text-sm font-medium transition-colors ${
       active ? 'bg-primary text-white' : 'text-text-soft hover:bg-surface-soft hover:text-text'
     }`
-
-  const setLink = useCallback(() => {
-    if (!linkUrl) return
-    editor.chain().focus().extendMarkRange('link').setLink({ href: linkUrl }).run()
-    setShowLinkInput(false)
-    setLinkUrl('')
-  }, [editor, linkUrl])
 
   async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
