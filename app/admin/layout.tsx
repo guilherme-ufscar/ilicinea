@@ -12,6 +12,7 @@ const navItems = [
   { href: '/admin/noticias', label: 'Notícias', icon: 'news' },
   { href: '/admin/turismo', label: 'Turismo', icon: 'map' },
   { href: '/admin/newsletter', label: 'Newsletter', icon: 'mail' },
+  { href: '/admin/financeiro', label: 'Financeiro', icon: 'gem' },
 ]
 
 export default async function AdminLayout({
@@ -47,7 +48,7 @@ export default async function AdminLayout({
               href={item.href}
               className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-soft hover:bg-primary-light hover:text-primary transition-colors text-sm font-medium"
             >
-              <Icon name={item.icon as 'dashboard' | 'users' | 'store' | 'home' | 'news' | 'map' | 'mail'} className="w-4 h-4" />
+              <Icon name={item.icon as 'dashboard' | 'users' | 'store' | 'home' | 'news' | 'map' | 'mail' | 'gem'} className="w-4 h-4" />
               {item.label}
             </Link>
           ))}
