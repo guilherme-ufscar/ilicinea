@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { maskPhone, maskCep } from '@/lib/masks'
 
 const TIPOS = ['CASA', 'APARTAMENTO', 'SOBRADO', 'TERRENO', 'CHACARA', 'SITIO', 'FAZENDA', 'GLEBA', 'RANCHO', 'FLAT', 'LOJA', 'SALA', 'SALA_COMERCIAL', 'GALPAO', 'PAVILHAO_GALPAO', 'BARRACAO', 'PREDIO', 'AREA_INDUSTRIAL', 'POUSADA']
 const FINALIDADES = ['RESIDENCIAL', 'COMERCIAL', 'RURAL', 'MISTO']
@@ -81,6 +82,18 @@ export default function EditarImovelPage() {
   function update(f: string, v: any) { setForm(prev => ({ ...prev, [f]: v })) }
   function toggle(f: string) { setForm(prev => ({ ...prev, [f]: !prev[f] })) }
 
+  async function buscarCep(cepValue?: string) {
+    const raw = (cepValue || form.cep).replace(/\D/g, '')
+    if (raw.length < 8) return
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`)
+      const data = await res.json()
+      if (!data.erro) {
+        setForm(prev => ({ ...prev, logradouro: data.logradouro || '', bairro: data.bairro || '' }))
+      }
+    } catch {}
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
@@ -142,7 +155,7 @@ export default function EditarImovelPage() {
 
         <div className="card p-6 space-y-4">
           <h2 className="text-lg font-semibold text-text">Localização</h2>
-          <InputF label="CEP" value={form.cep} onChange={v => update('cep', v)} />
+          <InputF label="CEP" value={form.cep} onChange={v => { const masked = maskCep(v); update('cep', masked); if (masked.replace(/\D/g, '').length === 8) buscarCep(masked) }} placeholder="37175-000" />
           <InputF label="Endereço" value={form.logradouro} onChange={v => update('logradouro', v)} />
           <InputF label="Número" value={form.numero} onChange={v => update('numero', v)} />
           <InputF label="Bairro" value={form.bairro} onChange={v => update('bairro', v)} />
@@ -177,8 +190,8 @@ export default function EditarImovelPage() {
         <div className="card p-6 space-y-4">
           <h2 className="text-lg font-semibold text-text">Contato</h2>
           <InputF label="Nome *" value={form.nomeAnunciante} onChange={v => update('nomeAnunciante', v)} />
-          <InputF label="Telefone" value={form.telefoneContato} onChange={v => update('telefoneContato', v)} />
-          <InputF label="WhatsApp" value={form.whatsappContato} onChange={v => update('whatsappContato', v)} />
+          <InputF label="Telefone" value={form.telefoneContato} onChange={v => update('telefoneContato', maskPhone(v))} placeholder="(35) 99999-0000" />
+          <InputF label="WhatsApp" value={form.whatsappContato} onChange={v => update('whatsappContato', maskPhone(v))} placeholder="(35) 99999-0000" />
           <InputF label="E-mail" value={form.emailContato} onChange={v => update('emailContato', v)} />
           <InputF label="CRECI" value={form.creci} onChange={v => update('creci', v)} />
         </div>
@@ -191,11 +204,11 @@ export default function EditarImovelPage() {
   )
 }
 
-function InputF({ label, value, onChange, type = 'text' }: { label: string; value: string; onChange: (v: string) => void; type?: string }) {
+function InputF({ label, value, onChange, type = 'text', placeholder }: { label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string }) {
   return (
     <div>
       <label className="block text-sm font-medium text-text mb-1">{label}</label>
-      <input type={type} value={value} onChange={e => onChange(e.target.value)} className="w-full px-4 py-2.5 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
+      <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full px-4 py-2.5 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
     </div>
   )
 }

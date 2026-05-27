@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { maskPhone, maskCep } from '@/lib/masks'
 
 const SEGMENTACOES = ['Alimentação', 'Saúde', 'Beleza', 'Educação', 'Serviços', 'Varejo', 'Automotivo', 'Construção', 'Tecnologia', 'Entretenimento', 'Outro']
 
@@ -65,10 +66,11 @@ export default function EditarEmpresaPage() {
     } catch { setError('Erro inesperado') } finally { setLoading(false) }
   }
 
-  async function buscarCep() {
-    if (form.cep.replace(/\D/g, '').length < 8) return
+  async function buscarCep(cepValue?: string) {
+    const raw = (cepValue || form.cep).replace(/\D/g, '')
+    if (raw.length < 8) return
     try {
-      const res = await fetch(`https://viacep.com.br/ws/${form.cep.replace(/\D/g, '')}/json/`)
+      const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`)
       const data = await res.json()
       if (!data.erro) {
         setForm(prev => ({ ...prev, endereco: data.logradouro || '', bairro: data.bairro || '' }))
@@ -103,15 +105,15 @@ export default function EditarEmpresaPage() {
 
         <div className="card p-6 space-y-4">
           <h2 className="text-lg font-semibold text-text">Contato</h2>
-          <GridInput label="Telefone fixo" value={form.telefone} onChange={v => update('telefone', v)} />
-          <GridInput label="Celular" value={form.celular} onChange={v => update('celular', v)} />
-          <GridInput label="WhatsApp (com DDD)" value={form.whatsapp} onChange={v => update('whatsapp', v)} placeholder="5535999999999" />
+          <GridInput label="Telefone fixo" value={form.telefone} onChange={v => update('telefone', maskPhone(v))} placeholder="(35) 3844-0000" />
+          <GridInput label="Celular" value={form.celular} onChange={v => update('celular', maskPhone(v))} placeholder="(35) 99999-0000" />
+          <GridInput label="WhatsApp (com DDD)" value={form.whatsapp} onChange={v => update('whatsapp', maskPhone(v))} placeholder="(35) 99999-0000" />
           <GridInput label="E-mail" value={form.email} onChange={v => update('email', v)} />
         </div>
 
         <div className="card p-6 space-y-4">
           <h2 className="text-lg font-semibold text-text">Endereço</h2>
-          <GridInput label="CEP" value={form.cep} onChange={v => update('cep', v)} onBlur={buscarCep} />
+          <GridInput label="CEP" value={form.cep} onChange={v => { const masked = maskCep(v); update('cep', masked); if (masked.replace(/\D/g, '').length === 8) buscarCep(masked) }} placeholder="37175-000" />
           <GridInput label="Endereço" value={form.endereco} onChange={v => update('endereco', v)} />
           <GridInput label="Bairro" value={form.bairro} onChange={v => update('bairro', v)} />
         </div>

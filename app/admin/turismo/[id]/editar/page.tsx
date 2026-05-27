@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import RichTextEditor from '@/components/editor/RichTextEditor'
+import { maskPhone } from '@/lib/masks'
 
 const CATEGORIAS = [
   { key: 'NATUREZA', label: 'Natureza' }, { key: 'RELIGIOSO', label: 'Religioso' },
@@ -138,7 +139,7 @@ export default function EditarTurismoPage() {
           <InputF label="Horário de funcionamento" value={form.horarioFuncionamento} onChange={(v) => update('horarioFuncionamento', v)} />
           <InputF label="Tempo de duração" value={form.tempoDuracao} onChange={(v) => update('tempoDuracao', v)} />
           <InputF label="Melhor época" value={form.melhorEpoca} onChange={(v) => update('melhorEpoca', v)} />
-          <InputF label="Telefone" value={form.telefoneContato} onChange={(v) => update('telefoneContato', v)} />
+          <InputF label="Telefone" value={form.telefoneContato} onChange={(v) => update('telefoneContato', maskPhone(v))} placeholder="(35) 99999-0000" />
           <InputF label="Instagram" value={form.linkInstagram} onChange={(v) => update('linkInstagram', v)} />
           <InputF label="Site" value={form.linkSite} onChange={(v) => update('linkSite', v)} />
           <div className="flex items-center gap-6">

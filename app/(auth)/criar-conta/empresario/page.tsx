@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import { maskPhone, maskCep } from '@/lib/masks'
 
 const SEGMENTACOES = [
   'Alimentação', 'Saúde', 'Beleza', 'Educação', 'Serviços', 'Varejo',
@@ -38,10 +39,11 @@ export default function CadastroEmpresarioPage() {
     setForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  async function buscarCep() {
-    if (form.cep.length < 8) return
+  async function buscarCep(cepValue?: string) {
+    const raw = (cepValue || form.cep).replace(/\D/g, '')
+    if (raw.length < 8) return
     try {
-      const res = await fetch(`https://viacep.com.br/ws/${form.cep.replace(/\D/g, '')}/json/`)
+      const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`)
       const data = await res.json()
       if (!data.erro) {
         setForm((prev) => ({
@@ -181,15 +183,15 @@ export default function CadastroEmpresarioPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-text mb-1">Telefone fixo</label>
-              <input type="tel" value={form.telefone} onChange={(e) => update('telefone', e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
+              <input type="tel" value={form.telefone} onChange={(e) => update('telefone', maskPhone(e.target.value))} placeholder="(35) 3844-0000" className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
               <label className="block text-sm font-medium text-text mb-1">Celular / WhatsApp</label>
-              <input type="tel" value={form.celular} onChange={(e) => update('celular', e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
+              <input type="tel" value={form.celular} onChange={(e) => update('celular', maskPhone(e.target.value))} placeholder="(35) 99999-0000" className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
               <label className="block text-sm font-medium text-text mb-1">CEP</label>
-              <input type="text" value={form.cep} onChange={(e) => update('cep', e.target.value)} onBlur={buscarCep} className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
+              <input type="text" value={form.cep} onChange={(e) => { const masked = maskCep(e.target.value); update('cep', masked); if (masked.replace(/\D/g, '').length === 8) buscarCep(masked) }} placeholder="37175-000" className="w-full px-4 py-3 rounded-lg border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary" />
             </div>
             <div>
               <label className="block text-sm font-medium text-text mb-1">Endereço</label>

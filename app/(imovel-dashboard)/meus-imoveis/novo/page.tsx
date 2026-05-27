@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { maskPhone, maskCep } from '@/lib/masks'
 
 const TIPOS = ['CASA', 'APARTAMENTO', 'SOBRADO', 'TERRENO', 'CHACARA', 'SITIO', 'FAZENDA', 'GLEBA', 'RANCHO', 'FLAT', 'LOJA', 'SALA', 'SALA_COMERCIAL', 'GALPAO', 'PAVILHAO_GALPAO', 'BARRACAO', 'PREDIO', 'AREA_INDUSTRIAL', 'POUSADA']
 const FINALIDADES = ['RESIDENCIAL', 'COMERCIAL', 'RURAL', 'MISTO']
@@ -38,6 +39,18 @@ export default function NovoImovelPage() {
 
   function nextStep() { setError(null); setStep(s => Math.min(s + 1, 5)) }
   function prevStep() { setError(null); setStep(s => Math.max(s - 1, 1)) }
+
+  async function buscarCep(cepValue?: string) {
+    const raw = (cepValue || form.cep).replace(/\D/g, '')
+    if (raw.length < 8) return
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${raw}/json/`)
+      const data = await res.json()
+      if (!data.erro) {
+        setForm(prev => ({ ...prev, logradouro: data.logradouro || '', bairro: data.bairro || '' }))
+      }
+    } catch {}
+  }
 
   async function handleSubmit() {
     setError(null)
@@ -97,7 +110,7 @@ export default function NovoImovelPage() {
         {step === 2 && (
           <>
             <h2 className="text-lg font-semibold text-text mb-4">Localização</h2>
-            <InputF label="CEP" value={form.cep} onChange={v => update('cep', v)} />
+            <InputF label="CEP" value={form.cep} onChange={v => { const masked = maskCep(v); update('cep', masked); if (masked.replace(/\D/g, '').length === 8) buscarCep(masked) }} placeholder="37175-000" />
             <InputF label="Logradouro" value={form.logradouro} onChange={v => update('logradouro', v)} />
             <InputF label="Número" value={form.numero} onChange={v => update('numero', v)} />
             <InputF label="Complemento" value={form.complemento} onChange={v => update('complemento', v)} />
@@ -229,8 +242,8 @@ export default function NovoImovelPage() {
 
             <h3 className="font-medium text-text text-sm mt-4 pt-4 border-t border-border">Dados de contato</h3>
             <InputF label="Nome para exibição *" value={form.nomeAnunciante} onChange={v => update('nomeAnunciante', v)} />
-            <InputF label="Telefone" value={form.telefoneContato} onChange={v => update('telefoneContato', v)} />
-            <InputF label="WhatsApp" value={form.whatsappContato} onChange={v => update('whatsappContato', v)} />
+            <InputF label="Telefone" value={form.telefoneContato} onChange={v => update('telefoneContato', maskPhone(v))} placeholder="(35) 99999-0000" />
+            <InputF label="WhatsApp" value={form.whatsappContato} onChange={v => update('whatsappContato', maskPhone(v))} placeholder="(35) 99999-0000" />
             <InputF label="E-mail" value={form.emailContato} onChange={v => update('emailContato', v)} />
             <InputF label="CRECI" value={form.creci} onChange={v => update('creci', v)} />
           </>
