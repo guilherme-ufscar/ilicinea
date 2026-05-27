@@ -3,5 +3,12 @@ node_modules
 .git
 .env
 .env.local
+.env*.local
 *.md
 designs
+.claude
+.vscode
+.idea
+coverage
+*.log
+npm-debug.log*
