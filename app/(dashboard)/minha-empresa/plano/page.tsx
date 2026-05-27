@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
+import { UpgradeButton, ManageSubscriptionButton } from '@/components/StripeButtons'
+import SuccessMessage from './SuccessMessage'
 
 export default async function PlanoPage() {
   const session = await auth()
@@ -8,6 +10,8 @@ export default async function PlanoPage() {
 
   const empresa = await prisma.empresa.findUnique({ where: { userId: session.user.id } })
   if (!empresa) redirect('/minha-empresa')
+
+  const hasPaidPlan = empresa.plano !== 'GRATUITO'
 
   const PLANOS = [
     {
@@ -32,6 +36,8 @@ export default async function PlanoPage() {
       <h1 className="text-2xl font-bold text-text mb-2">Plano</h1>
       <p className="text-text-soft text-sm mb-6">Veja os detalhes do plano e faça upgrade.</p>
 
+      <SuccessMessage />
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PLANOS.map(plano => (
           <div key={plano.key} className={`card p-6 ${plano.current ? 'border-primary ring-2 ring-primary/20' : ''}`}>
@@ -46,14 +52,16 @@ export default async function PlanoPage() {
                 </li>
               ))}
             </ul>
-            {!plano.current && (
-              plano.key === 'PROFISSIONAL' ? (
-                <a href="https://wa.me/5535999999999" target="_blank" rel="noopener noreferrer" className="btn-primary w-full py-2 text-sm text-center inline-block">
-                  Falar no WhatsApp
-                </a>
-              ) : (
-                <button className="btn-primary w-full py-2 text-sm">Contratar</button>
-              )
+            {plano.current && hasPaidPlan && (
+              <ManageSubscriptionButton />
+            )}
+            {!plano.current && plano.key === 'ESSENCIAL' && empresa.plano === 'GRATUITO' && (
+              <UpgradeButton />
+            )}
+            {!plano.current && plano.key === 'PROFISSIONAL' && (
+              <a href="https://wa.me/5535999999999" target="_blank" rel="noopener noreferrer" className="btn-primary w-full py-2 text-sm text-center inline-block">
+                Falar no WhatsApp
+              </a>
             )}
           </div>
         ))}
