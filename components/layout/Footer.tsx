@@ -14,7 +14,7 @@ const footerLinks = [
     title: 'Imóveis',
     links: [
       { href: '/imoveis', label: 'Ver imóveis' },
-      { href: '/meus-imoveis/novo', label: 'Anunciar imóvel' },
+      { href: '/imoveis?negocio=TEMPORADA', label: 'Temporada' },
       { href: '/imoveis?negocio=VENDA', label: 'À venda' },
       { href: '/imoveis?negocio=ALUGUEL', label: 'Para alugar' },
     ],

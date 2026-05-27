@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
     name,
     email,
     password,
-    role,
     nomeFantasia,
     razaoSocial,
     cnpj,
@@ -44,8 +43,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'E-mail já cadastrado' }, { status: 409 })
   }
 
-  const validRoles: UserRole[] = ['COMERCIANTE', 'ANUNCIANTE_IMOVEL']
-  const userRole: UserRole = validRoles.includes(role) ? role : 'COMERCIANTE'
+  const userRole: UserRole = 'COMERCIANTE'
 
   if (userRole === 'COMERCIANTE' && (!nomeFantasia || !categoria || !segmentacao)) {
     return NextResponse.json(

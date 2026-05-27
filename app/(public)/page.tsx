@@ -19,7 +19,7 @@ const modules = [
     href: '/imoveis',
     icon: 'home',
     title: 'Imóveis',
-    description: 'Compre, alugue ou anuncie imóveis em Ilicínea',
+    description: 'Encontre imóveis para compra, aluguel e temporada em Ilicínea',
   },
   {
     href: '/noticias',
