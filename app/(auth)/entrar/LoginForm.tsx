@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -31,8 +29,7 @@ export default function LoginForm() {
       return
     }
 
-    router.push('/')
-    router.refresh()
+    window.location.href = '/minha-empresa'
   }
 
   return (

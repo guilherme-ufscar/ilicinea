@@ -93,8 +93,7 @@ export default function CadastroEmpresarioPage() {
       const loginRes = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
       if (loginRes?.error) { setError('Conta criada, mas falha no login automático.'); setLoading(false); return }
 
-      router.push('/minha-empresa')
-      router.refresh()
+      window.location.href = '/minha-empresa'
     } catch {
       setError('Erro inesperado. Tente novamente.')
     } finally {
