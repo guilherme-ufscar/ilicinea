@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSession, signOut } from 'next-auth/react'
 import MobileMenu from './MobileMenu'
 
 const navLinks = [
@@ -14,6 +15,8 @@ const navLinks = [
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { data: session, status } = useSession()
+  const isLoggedIn = status === 'authenticated'
 
   return (
     <>
@@ -47,12 +50,28 @@ export default function Header() {
 
             {/* Ações desktop */}
             <div className="hidden md:flex items-center gap-3">
-              <Link href="/entrar" className="btn-outline text-sm py-1.5 px-4">
-                Entrar
-              </Link>
-              <Link href="/criar-conta" className="btn-primary text-sm py-1.5 px-4">
-                Cadastrar empresa
-              </Link>
+              {isLoggedIn ? (
+                <>
+                  <Link href="/minha-empresa" className="btn-primary text-sm py-1.5 px-4">
+                    Meu painel
+                  </Link>
+                  <button
+                    onClick={() => signOut({ callbackUrl: '/' })}
+                    className="btn-outline text-sm py-1.5 px-4"
+                  >
+                    Sair
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/entrar" className="btn-outline text-sm py-1.5 px-4">
+                    Entrar
+                  </Link>
+                  <Link href="/criar-conta" className="btn-primary text-sm py-1.5 px-4">
+                    Cadastrar empresa
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Botão hambúrguer mobile */}
@@ -71,7 +90,7 @@ export default function Header() {
         </div>
       </header>
 
-      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} navLinks={navLinks} />
+      <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} navLinks={navLinks} isLoggedIn={isLoggedIn} />
     </>
   )
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect } from 'react'
+import { signOut } from 'next-auth/react'
 
 interface NavLink {
   href: string
@@ -13,9 +14,10 @@ interface MobileMenuProps {
   open: boolean
   onClose: () => void
   navLinks: NavLink[]
+  isLoggedIn: boolean
 }
 
-export default function MobileMenu({ open, onClose, navLinks }: MobileMenuProps) {
+export default function MobileMenu({ open, onClose, navLinks, isLoggedIn }: MobileMenuProps) {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -77,12 +79,28 @@ export default function MobileMenu({ open, onClose, navLinks }: MobileMenuProps)
 
         {/* Ações */}
         <div className="p-4 border-t border-[#E5E5E5] flex flex-col gap-3">
-          <Link href="/entrar" onClick={onClose} className="btn-outline text-center text-sm">
-            Entrar
-          </Link>
-          <Link href="/criar-conta" onClick={onClose} className="btn-primary text-center text-sm">
-            Cadastrar empresa
-          </Link>
+          {isLoggedIn ? (
+            <>
+              <Link href="/minha-empresa" onClick={onClose} className="btn-primary text-center text-sm">
+                Meu painel
+              </Link>
+              <button
+                onClick={() => { onClose(); signOut({ callbackUrl: '/' }) }}
+                className="btn-outline text-center text-sm"
+              >
+                Sair
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/entrar" onClick={onClose} className="btn-outline text-center text-sm">
+                Entrar
+              </Link>
+              <Link href="/criar-conta" onClick={onClose} className="btn-primary text-center text-sm">
+                Cadastrar empresa
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </div>
