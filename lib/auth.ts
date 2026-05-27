@@ -5,10 +5,24 @@ import bcryptjs from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import type { UserRole } from '@prisma/client'
 
+const useSecureCookies = process.env.NEXTAUTH_URL?.startsWith('https://') && process.env.NODE_ENV === 'production'
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
   trustHost: true,
+  useSecureCookies: false,
+  cookies: {
+    sessionToken: {
+      name: 'authjs.session-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: useSecureCookies,
+      },
+    },
+  },
   pages: {
     signIn: '/entrar',
     error: '/entrar',
