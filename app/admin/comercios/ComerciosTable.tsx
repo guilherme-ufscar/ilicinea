@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 interface EmpresaAdmin {
   id: string
@@ -23,15 +24,10 @@ const PLANO_BADGE: Record<string, string> = {
   PROFISSIONAL: 'badge-profissional',
 }
 
-const PLANO_LABEL: Record<string, string> = {
-  GRATUITO: 'Gratuito',
-  ESSENCIAL: 'Essencial',
-  PROFISSIONAL: 'Profissional',
-}
-
 export default function ComerciosTable({ empresas }: { empresas: EmpresaAdmin[] }) {
   const router = useRouter()
   const [updating, setUpdating] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
 
   async function toggleField(id: string, field: string, current: boolean) {
     setUpdating(id)
@@ -65,6 +61,19 @@ export default function ComerciosTable({ empresas }: { empresas: EmpresaAdmin[] 
     }
   }
 
+  async function handleDelete(id: string, nome: string) {
+    if (!confirm(`Tem certeza que deseja DELETAR "${nome}"? Esta ação não pode ser desfeita.`)) return
+    setDeleting(id)
+    try {
+      await fetch(`/api/comercios/admin/${id}`, { method: 'DELETE' })
+      router.refresh()
+    } catch (err) {
+      console.error('Erro ao deletar:', err)
+    } finally {
+      setDeleting(null)
+    }
+  }
+
   function formatDate(date: Date) {
     return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(new Date(date))
   }
@@ -85,7 +94,7 @@ export default function ComerciosTable({ empresas }: { empresas: EmpresaAdmin[] 
           </thead>
           <tbody>
             {empresas.map((e) => (
-              <tr key={e.id} className="border-b border-border/50 hover:bg-surface-soft/50 transition-colors">
+              <tr key={e.id} className={`border-b border-border/50 hover:bg-surface-soft/50 transition-colors ${!e.ativo ? 'opacity-50' : ''}`}>
                 <td className="py-3 px-4">
                   <p className="text-text font-medium">{e.nomeFantasia}</p>
                   <p className="text-text-muted text-xs">{e.categoria}</p>
@@ -127,8 +136,35 @@ export default function ComerciosTable({ empresas }: { empresas: EmpresaAdmin[] 
                   </div>
                 </td>
                 <td className="py-3 px-4 text-text-muted text-xs">{formatDate(e.createdAt)}</td>
-                <td className="py-3 px-4 text-right">
-                  {updating === e.id && <span className="text-xs text-text-muted">Salvando...</span>}
+                <td className="py-3 px-4">
+                  <div className="flex items-center justify-end gap-2">
+                    <Link
+                      href={`/comercios/${e.slug}`}
+                      target="_blank"
+                      className="text-xs text-text-muted hover:text-primary"
+                      title="Ver perfil público"
+                    >
+                      Ver
+                    </Link>
+                    <button
+                      onClick={() => toggleField(e.id, 'ativo', e.ativo)}
+                      disabled={updating === e.id}
+                      className={`text-xs font-medium px-2 py-1 rounded ${
+                        e.ativo ? 'text-status-warning hover:bg-status-warning/10' : 'text-status-success hover:bg-status-success/10'
+                      }`}
+                      title={e.ativo ? 'Inativar' : 'Ativar'}
+                    >
+                      {e.ativo ? 'Inativar' : 'Ativar'}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(e.id, e.nomeFantasia)}
+                      disabled={deleting === e.id}
+                      className="text-xs font-medium px-2 py-1 rounded text-accent hover:bg-accent/10"
+                      title="Deletar"
+                    >
+                      {deleting === e.id ? '...' : 'Deletar'}
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
