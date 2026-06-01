@@ -6,7 +6,7 @@ import { signIn } from 'next-auth/react'
 
 export default function LoginForm() {
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/minha-empresa'
+  const callbackUrl = searchParams.get('callbackUrl')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -32,7 +32,21 @@ export default function LoginForm() {
       return
     }
 
-    window.location.href = callbackUrl
+    let destino = callbackUrl
+    if (!destino) {
+      try {
+        const sessionRes = await fetch('/api/auth/session')
+        const session = await sessionRes.json()
+        const role = session?.user?.role
+        if (role === 'ADMIN') destino = '/admin'
+        else if (role === 'ANUNCIANTE_IMOVEL') destino = '/meus-imoveis'
+        else destino = '/minha-empresa'
+      } catch {
+        destino = '/minha-empresa'
+      }
+    }
+
+    window.location.href = destino
   }
 
   return (
