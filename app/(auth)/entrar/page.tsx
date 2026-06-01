@@ -3,6 +3,7 @@ import Link from 'next/link'
 import LoginForm from './LoginForm'
 
 export const metadata: Metadata = { title: 'Entrar' }
+export const dynamic = 'force-dynamic'
 
 export default function EntrarPage() {
   return (

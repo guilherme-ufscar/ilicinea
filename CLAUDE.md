@@ -68,10 +68,5 @@ FotoTurismo, Newsletter
 - Máx 20 fotos por imóvel
 - Admin deve aprovar antes de publicar
 
-## COMANDOS ÚTEIS
-npm run dev
-npx prisma migrate dev
-npx prisma studio
-docker-compose up -d
-docker-compose --profile dev up -d   # inclui pgAdmin
-docker-compose down
+##
+Rodará em docker, de forma alguma precisa ficar dando build, tentando rodar o código, irei testar em meu servidor depois, foque em entregar o código completo e finalizado, testes eu irei fazer.

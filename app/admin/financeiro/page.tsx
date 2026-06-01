@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 const PRECO_MENSAL: Record<string, number> = {
   GRATUITO: 0,
   ESSENCIAL: 34.99,
