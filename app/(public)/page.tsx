@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Icon from '@/components/Icon'
 
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: 'Ilicínea.com — Portal Local de Ilicínea/MG',
   description:

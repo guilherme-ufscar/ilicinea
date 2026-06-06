@@ -80,6 +80,7 @@ export default async function ImoveisPage({
           fotos: {
             orderBy: { ordem: 'asc' },
             take: 1,
+            select: { url: true, alt: true },
           },
         },
       }),

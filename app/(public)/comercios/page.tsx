@@ -14,15 +14,13 @@ export const metadata: Metadata = {
 export const revalidate = 3600
 
 async function getSegmentacoes() {
-  const empresas = await prisma.empresa.findMany({
+  const grouped = await prisma.empresa.groupBy({
+    by: ['segmentacao'],
     where: { aprovado: true, ativo: true },
-    select: { segmentacao: true },
+    _count: { segmentacao: true },
+    orderBy: { _count: { segmentacao: 'desc' } },
   })
-  const counts: Record<string, number> = {}
-  for (const e of empresas) {
-    counts[e.segmentacao] = (counts[e.segmentacao] || 0) + 1
-  }
-  return Object.entries(counts).sort((a, b) => b[1] - a[1])
+  return grouped.map((g) => [g.segmentacao, g._count.segmentacao] as [string, number])
 }
 
 export default async function ComerciosPage({

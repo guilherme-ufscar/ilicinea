@@ -56,6 +56,18 @@ export default async function TurismoPage({
     const pontos = await prisma.pontoTuristico.findMany({
       where,
       orderBy: { nome: 'asc' },
+      select: {
+        id: true,
+        slug: true,
+        nome: true,
+        categoria: true,
+        resumo: true,
+        imagemCapa: true,
+        imagemCapaAlt: true,
+        distanciaCentro: true,
+        dificuldade: true,
+        entradaGratuita: true,
+      },
     })
 
     return (
