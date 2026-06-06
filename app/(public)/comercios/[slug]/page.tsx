@@ -4,6 +4,9 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import dynamic from 'next/dynamic'
+
+const MapaEmpresa = dynamic(() => import('@/components/MapaEmpresa'), { ssr: false })
 
 interface Props {
   params: { slug: string }
@@ -218,10 +221,10 @@ export default async function ComercioPerfilPage({ params }: Props) {
           <div className="card p-5 space-y-3 sticky top-20">
             <h3 className="font-bold text-text">Contato</h3>
 
-            {/* WhatsApp - apenas ESSENCIAL+ */}
-            {isEssencialPlus && empresa.whatsapp && (
+            {/* WhatsApp - apenas PROFISSIONAL */}
+            {isProfissional && empresa.whatsapp && (
               <a
-                href={`https://wa.me/55${whatsappNum}?text=Ol%C3%A1!`}
+                href={`https://wa.me/55${whatsappNum}?text=${encodeURIComponent(`Olá, ${empresa.nomeFantasia}! Vi o seu negócio no ilicinea.com e gostaria de mais informações.`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-whatsapp w-full justify-center inline-flex items-center gap-2 py-3"
@@ -286,6 +289,21 @@ export default async function ComercioPerfilPage({ params }: Props) {
               </div>
             )}
           </div>
+
+          {/* Mapa de localização */}
+          {empresa.endereco && (
+            <div>
+              <h3 className="font-bold text-text mb-2 text-sm">Localização</h3>
+              <MapaEmpresa
+                endereco={empresa.endereco}
+                bairro={empresa.bairro}
+                cidade={empresa.cidade}
+                estado={empresa.estado}
+                cep={empresa.cep}
+                nomeFantasia={empresa.nomeFantasia}
+              />
+            </div>
+          )}
 
           {/* Newsletter */}
           <NewsletterSignup />
