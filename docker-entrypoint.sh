@@ -2,7 +2,7 @@
 set -e
 
 echo "Aguardando banco de dados..."
-until ./node_modules/.bin/prisma migrate deploy; do
+until ./node_modules/.bin/prisma db push --skip-generate; do
   echo "Banco indisponível, tentando novamente em 3s..."
   sleep 3
 done
