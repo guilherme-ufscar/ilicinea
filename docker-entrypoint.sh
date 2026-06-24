@@ -7,7 +7,12 @@ set -e
 echo "Sincronizando estáticos do Next.js (preservando chunks antigos)..."
 mkdir -p /app/.next/static
 if [ -d /app/.next/static-build ]; then
-  cp -rn /app/.next/static-build/. /app/.next/static/ 2>/dev/null || true
+  # cp -r (sem -n: o cp do BusyBox/Alpine nao suporta -n). Como os nomes
+  # dos chunks sao hasheados, sobrescrever arquivos identicos e inofensivo;
+  # os chunks de deploys antigos que nao estao na origem sao PRESERVADOS.
+  cp -r /app/.next/static-build/. /app/.next/static/
+  echo "Estaticos sincronizados:"
+  ls /app/.next/static/chunks | head -n 3
 fi
 
 echo "Aguardando banco de dados..."
