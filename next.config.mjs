@@ -18,6 +18,7 @@ const nextConfig = {
   },
   async headers() {
     return [
+      // Estáticos com hash no nome — podem ser cacheados para sempre
       {
         source: '/uploads/:path*',
         headers: [
@@ -28,6 +29,17 @@ const nextConfig = {
         source: '/_next/static/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      // HTML nunca deve ser cacheado — garante que após deploy o browser
+      // sempre busque o HTML novo com os hashes corretos dos chunks.
+      // Exclui /_next/static/ e /uploads/ que já têm hash no nome.
+      {
+        source: '/((?!_next/static|_next/image|uploads).*)',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+          { key: 'Pragma', value: 'no-cache' },
+          { key: 'Expires', value: '0' },
         ],
       },
     ]
