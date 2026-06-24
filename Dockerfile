@@ -35,7 +35,15 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Os estáticos deste build vão para um diretório de ORIGEM. O entrypoint
+# mescla esse conteúdo no volume persistente /app/.next/static (sem apagar
+# os chunks de deploys anteriores) — evitando 404 e tela branca quando um
+# usuário ainda tem HTML antigo em cache.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static-build
+# Cria o ponto de montagem do volume com a dona correta. Ao montar o volume
+# nomeado pela primeira vez, o Docker herda esta dona (nextjs), garantindo
+# que o entrypoint consiga mesclar os estáticos.
+RUN mkdir -p /app/.next/static && chown -R nextjs:nodejs /app/.next
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json

@@ -26,6 +26,10 @@ services:
       - MAX_UPLOAD_SIZE=${MAX_UPLOAD_SIZE:-5242880}
       - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
       - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+    volumes:
+      # Acumula os chunks estáticos entre deploys → evita 404 / tela branca
+      - ilicinea_static:/app/.next/static
+      - ilicinea_uploads:/app/public/uploads
     ports:
       - "${PUBLIC_APP_PORT:-10203}:3000"
     depends_on:
@@ -72,6 +76,8 @@ services:
 
 volumes:
   ilicinea_pgdata:
+  ilicinea_static:
+  ilicinea_uploads:
 
 networks:
   ilicinea_net:
